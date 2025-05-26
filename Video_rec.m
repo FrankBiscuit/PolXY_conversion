@@ -7,24 +7,24 @@ imshow(firstFrame);
 title('DrawIntered');
 hold on;
 
-% --- 步骤 2：手动绘制多个矩形区域 ---
-ROIs = {};  % 存储矩形对象
+% Initialization
+ROIs = {};  
 while true
-    h = drawrectangle();  % 鼠标画矩形
-    if isempty(h); break; end  % 按回车退出
-    ROIs{end+1} = h;  % 保存
+    h = drawrectangle();  
+    if isempty(h); break; end 
+    ROIs{end+1} = h;  
 end
 nROIs = length(ROIs);
 
-% 显示数量
+
 fprintf('共选取了 %d 个区域\n', nROIs);
 
-% --- 步骤 3：重置视频并提取灰度值 ---
+%% reset and drag grey intesnity
 vid.CurrentTime = 0;
 frameCount = floor(vid.Duration * vid.FrameRate);
 grayValues = zeros(frameCount, nROIs);
 
-% --- 步骤 4：逐帧提取每个区域的平均灰度 ---
+% average 
 f = 1;
 while hasFrame(vid)
     frame = readFrame(vid);
@@ -43,7 +43,7 @@ while hasFrame(vid)
     f = f + 1;
 end
 
-% --- 步骤 5：绘图 ---
+% plot
 figure;
 plot(grayValues);
 xlabel('Frame');
@@ -51,5 +51,5 @@ ylabel('Gray Level (Mean in ROI)');
 legend(arrayfun(@(i)sprintf('ROI %d',i), 1:nROIs, 'UniformOutput', false));
 title('灰度值随时间变化');
 
-% --- 可选保存 ---
+%save
 save('gray_roi_values1.mat', 'grayValues');
